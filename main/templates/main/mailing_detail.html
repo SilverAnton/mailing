@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+        <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+            <h1 class="display-4">Рассылка</h1>
+        </div>
+        <div class="container">
+            <div class="row text-start">
+                <div class="col-lg-9 col-md-6 col-sm-12">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-body">
+
+                            <table class="table table-striped">
+                                <tr>
+                                    <td>начало расслыки: {{ object.start_time }}</td>
+                                    <td>конец расслыки: {{ object.end_time }}</td>
+                                    <td>периодичность расслыки: {{ object.periodicity }}</td>
+                                    <td>статус расслыки: {{ object.status }}</td>
+                                </tr>
+                            </table>
+
+                                    <a class="btn btn-secondary btn-primary" type="button" href="{% url 'main:mailing_update' object.pk %}">Изменить</a>
+
+                                    <a class="btn btn-secondary btn-primary" type="button" href="{% url 'main:mailing_delete' object.pk %}">Удалить</a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}

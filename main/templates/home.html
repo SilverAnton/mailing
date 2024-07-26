@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">MAILING FOR YOU</h1>
+    <p class="lead">Это удобный сервис для автоматической рассылки ваших сообщений клиентам</p>
+</div>
+
+<div class="container">
+    <div class="row text-center">
+        <div class="col-4-6">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Попробуй сервис MAILING </h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                        <a class="btn btn-secondary btn-primary" type="button" href="{% url 'main:message_list' %}">Посмотреть все сообщения</a>
+
+                        <a class="btn btn-secondary btn-primary" type="button" href="{% url 'main:client_list' %}">Посмотреть всех клиентов</a>
+                        <a class="btn btn-secondary btn-primary" type="button" href="{% url 'main:mailing_list' %}">Посмотреть все рассылки</a>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
