@@ -1,5 +1,18 @@
 from django import forms
+from django.forms import BooleanField
+
 from main.models import ServiceClient, ClientMessage, Mailing
+
+
+class StyleFormMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for k, v in self.fields.items():
+
+            if isinstance(v, BooleanField):
+                v.widget.attrs['class'] = 'form-check-input'
+            else:
+                v.widget.attrs['class'] = 'form-control'
 
 
 class ClientForm(forms.ModelForm):

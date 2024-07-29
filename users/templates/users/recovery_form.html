@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <form class='row' method="post" enctype="multipart/form-data">
+            <div class="col-6">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                    {% if error_message %}
+                        <div class="p-2 text-danger-emphasis bg-danger-subtle rounded-2">
+                    {{ error_message }}
+                       </div>
+                    {% else %}
+                    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+                        <h1  class="display-4">
+                            Забыли пароль?
+                        </h1>
+                    </div>
+                    <div class="card-header py-3">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class=" btn btn-secondary btn-primary" >
+                                Получить новый пароль
+                            </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+    </form>
+</div>
+{% endblock %}
