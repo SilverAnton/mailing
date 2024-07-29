@@ -9,6 +9,7 @@ class User(AbstractUser):
     avatar = models.ImageField(upload_to='users/', verbose_name='avatar', null=True, blank=True)
     country = models.CharField(max_length=150, verbose_name='country', null=True, blank=True)
     token = models.CharField(max_length=100, verbose_name='token', null=True, blank=True)
+    is_active = models.BooleanField(default=True, verbose_name='is_active status',null=True, blank=True)
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
@@ -18,3 +19,6 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "пользователь"
         verbose_name_plural = "пользователи"
+        permissions = [
+            ("can_edit_is_active", "can edit is active"),
+        ]

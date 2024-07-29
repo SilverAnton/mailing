@@ -1,8 +1,9 @@
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from main.forms import ClientForm, MessageForm, MailingForm
+from main.forms import ClientForm, MessageForm, MailingForm, MailingManagerForm
 from main.models import ServiceClient, ClientMessage, Mailing
 
 
@@ -121,6 +122,7 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+
 class MailingDetailView(DetailView):
     model = Mailing
 
@@ -140,6 +142,14 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
         mailing.owner = user
         mailing.save()
         return super().form_valid(form)
+
+    def get_form_class(self):
+        user = self.request.user
+        if user == self.object.owner:
+            return MailingForm
+        elif user.has_perm("main.can_edit_status"):
+            return MailingManagerForm
+        raise PermissionDenied
 
 
 class MailingDeleteView(DeleteView):

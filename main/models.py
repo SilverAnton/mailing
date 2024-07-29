@@ -7,7 +7,7 @@ class ServiceClient(models.Model):
     email = models.EmailField(unique=True, verbose_name="email")
     name = models.CharField(max_length=100, verbose_name="name")
     comment = models.TextField(verbose_name="comment")
-    owner = models.ForeignKey(User, verbose_name='Владелец', on_delete=models.CASCADE, null=True, blank=True)
+    owner = models.ForeignKey(User, verbose_name='Владелец', on_delete=models.CASCADE, null=True, blank=True,)
 
     def __str__(self):
         return self.email
@@ -65,6 +65,9 @@ class Mailing(models.Model):
     class Meta:
         verbose_name = 'настройка рассылки'
         verbose_name_plural = 'настройки рассылок'
+        permissions = [
+            ("can_edit_status", "can edit status"),
+        ]
 
 
 class TryToSend(models.Model):

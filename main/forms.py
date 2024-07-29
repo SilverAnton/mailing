@@ -31,3 +31,9 @@ class MailingForm(forms.ModelForm):
     class Meta:
         model = Mailing
         fields = ['start_time', 'end_time', 'periodicity', 'client_list', 'client_message', 'owner']
+
+
+class MailingManagerForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = Mailing
+        fields = ('status',)
