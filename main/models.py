@@ -31,9 +31,9 @@ class ClientMessage(models.Model):
 
 
 class Mailing(models.Model):
-    DAILY = "Раз в день"
-    WEEKLY = "Раз в неделю"
-    MONTHLY = "Раз в месяц"
+    DAILY = "daily"
+    WEEKLY = "weekly"
+    MONTHLY = "monthly"
 
     PERIODICITY_CHOICES = [
         (DAILY, "Раз в день"),
@@ -41,9 +41,9 @@ class Mailing(models.Model):
         (MONTHLY, "Раз в месяц"),
     ]
 
-    CREATED = 'Создана'
-    STARTED = 'Запущена'
-    COMPLETED = 'Завершена'
+    CREATED = 'CREATED'
+    STARTED = 'STARTED'
+    COMPLETED = 'COMPLETED'
 
     STATUS_CHOICES = [
         (COMPLETED, "Завершена"),
@@ -52,13 +52,14 @@ class Mailing(models.Model):
     ]
     start_time = models.DateTimeField(verbose_name='дата и время начала рассылки')
     end_time = models.DateTimeField(verbose_name='дата и время окончания рассылки')
+    next_send_time = models.DateTimeField(verbose_name='Время следующей отправки',null=True, blank=True)
     periodicity = models.CharField(max_length=50, choices=PERIODICITY_CHOICES, verbose_name='периодичность')
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=CREATED, verbose_name='статус')
     client_list = models.ManyToManyField(ServiceClient, verbose_name='клиент')
     client_message = models.ForeignKey(ClientMessage, verbose_name='Сообщение', on_delete=models.CASCADE, null=True,
                                        blank=True)
     owner = models.ForeignKey(User, verbose_name='Владелец', on_delete=models.CASCADE)
-
+    is_active = models.BooleanField(default=True, verbose_name='Блокировка Рассылки')
     def __str__(self):
         return f'time: {self.start_time} - {self.end_time}, periodicity: {self.periodicity}, status: {self.status}'
 
@@ -83,7 +84,7 @@ class TryToSend(models.Model):
     server_response = models.CharField(verbose_name='ответ почтового сервера', null=True, blank=True)
 
     mailing_list = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='рассылка')
-    client = models.ForeignKey(ServiceClient, on_delete=models.CASCADE, verbose_name='клиент')
+    client = models.ForeignKey(ServiceClient, on_delete=models.CASCADE, verbose_name='клиент', null=True, blank=True)
 
     def __str__(self):
         return f'{self.time} {self.status}'

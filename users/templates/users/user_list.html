@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="card">
+            <div class="card-body">
+                <a class="btn btn-secondary btn-primary" type="button" href="{% url 'main:mailing_create' %}">Добавить рассылку</a>
+            </div>
+    </div>
+
+        <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+            <h1 class="display-4">Список пользователей сервиса</h1>
+        </div>
+        {% for user in object_list %}
+        <div class="container">
+            <div class="row text-start">
+                <div class="col-lg-9 col-md-6 col-sm-12">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <tr>
+                                    <h4>
+                                        <a class="text-black" href="{% url 'users:user_detail' user.pk %}">Пользователь: {{ user.email }}  </a>
+                                    </h4>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+{% endblock %}

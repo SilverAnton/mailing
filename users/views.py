@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 
 import string
@@ -13,10 +14,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils.crypto import get_random_string
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView, DetailView
 
 from config.settings import EMAIL_HOST_USER
-from users.forms import UserRegisterForm, UserUpdateForm, UserRecoveryForm
+from users.forms import UserRegisterForm, UserUpdateForm, UserRecoveryForm, UserManagerForm
 from users.models import User
 import secrets
 
@@ -95,3 +96,24 @@ class UserPasswordResetView(PasswordResetView):
                 context = {'error_message': 'Такой email не зарегистрирован.'}
                 return render(self.request, 'users/recovery_form.html', context)
 
+
+class UserListView(ListView):
+    model = User
+
+
+class UserDetailView(DetailView):
+    model = User
+
+
+class UserUpdateView(UpdateView):
+    model = User
+    form_class = UserUpdateForm
+    success_url = reverse_lazy("users:user_list")
+
+    def get_form_class(self):
+        user = self.request.user
+        if user.is_superuser:
+            return UserUpdateForm
+        elif user.has_perm("users.can_edit_is_active"):
+            return UserManagerForm
+        raise PermissionDenied

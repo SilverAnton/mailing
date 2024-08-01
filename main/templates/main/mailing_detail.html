@@ -2,7 +2,7 @@
 
 {% block content %}
         <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-            <h1 class="display-4">Рассылка</h1>
+            <h1 class="display-4">Рассылка №{{ object.pk }}</h1>
         </div>
         <div class="container">
             <div class="row text-start">
@@ -13,16 +13,27 @@
                             <table class="table table-striped">
                                 <tr>
                                     <td>начало расслыки: {{ object.start_time }}</td>
+                                </tr>
+                                <tr>
                                     <td>конец расслыки: {{ object.end_time }}</td>
+                                </tr>
+                                <tr>
                                     <td>периодичность расслыки: {{ object.periodicity }}</td>
+                                </tr>
+                                <tr>
                                     <td>статус расслыки: {{ object.status }}</td>
                                 </tr>
+                                <tr>
+                                    <td>автор расслыки: {{ object.owner }}</td>
+                                </tr>
+
                             </table>
-
+                                    {% if perms.main.can_edit_status or user.is_superuser or user == object.owner %}
                                     <a class="btn btn-secondary btn-primary" type="button" href="{% url 'main:mailing_update' object.pk %}">Изменить</a>
-
+                                    {% endif %}
+                                    {% if user.is_superuser or user == object.owner %}
                                     <a class="btn btn-secondary btn-primary" type="button" href="{% url 'main:mailing_delete' object.pk %}">Удалить</a>
-
+                                    {% endif %}
                         </div>
                     </div>
                 </div>

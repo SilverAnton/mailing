@@ -14,7 +14,7 @@ class UserRegisterForm(StyleFormMixin, UserCreationForm):
 class UserUpdateForm(StyleFormMixin, UserChangeForm):
     class Meta:
         model = User
-        fields = ['email', 'phone', 'avatar', 'country']
+        fields = ['email', 'phone', 'avatar', 'country', 'is_active']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -25,3 +25,9 @@ class UserRecoveryForm(StyleFormMixin, PasswordResetForm):
     class Meta:
         model = User
         fields = ('email',)
+
+
+class UserManagerForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('is_active',)

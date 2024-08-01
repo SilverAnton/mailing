@@ -24,6 +24,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("main.urls", namespace="main")),
     path("users/", include("users.urls", namespace="users")),
+    path("mailing_blog/", include("mailing_blog.urls", namespace="mailing_blog")),
 ]
 
 if settings.DEBUG:

@@ -16,6 +16,8 @@ pillow = "^10.4.0"
 ipython = "^8.26.0"
 pytz = "^2024.1"
 apscheduler = "^3.10.4"
+django-apscheduler = "^0.6.2"
+redis = "^5.0.8"
 
 
 [build-system]

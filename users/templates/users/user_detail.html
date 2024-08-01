@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{%load my_tags%}
+{% block content %}
+
+        <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+            <h1 class="display-4">{{ object.email }}</h1>
+        </div>
+         <div class="card px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="width: 18rem;">
+                        <img src="{{ user.avatar | media_filter }}" class="card-img-top" alt="...">
+                    </div>
+        <div class="container">
+            <div class="row text-start">
+                <div class="col-lg-9 col-md-6 col-sm-12">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-body">
+
+                            <table class="table table-striped">
+                                <tr>
+                                    <td>Email пользователя: {{ object.email }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Телефон пользователя: {{ object.phone }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Имя пользователя: {{ object.first_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Фамилия пользователя: {{ object.last_name }}</td>
+                                </tr>
+                                    <td>Страна пользователя: {{ object.country }}</td>
+                                <tr>
+                                    <td>Активность пользователя: {{ object.is_active }}</td>
+                                </tr>
+
+                            </table>
+                                <a class="btn btn-secondary btn-primary" type="button" href="{% url 'users:user_update' object.pk %}">Изменить</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}

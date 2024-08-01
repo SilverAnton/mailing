@@ -1,5 +1,18 @@
 {% extends 'base.html' %}
+{% load my_tags %}
 {% block content %}
+{% if user.is_staff or user.is_superuser %}
+<div class="cool-6">
+    <nav class="ms-5">
+        <a class="btn btn-secondary btn-primary" type="button" href="{% url 'users:user_list' %}">Пользователи сервиса</a>
+{% endif %}
+{% if user.is_authenticated %}
+        <a class="btn btn-secondary btn-primary" type="button" href="{% url 'mailing_blog:blog_list' %}">Блог</a>
+{% endif %}
+    </nav>
+
+</div>
+
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
     <h1 class="display-4">MAILING FOR YOU</h1>
     <p class="lead">Это удобный сервис для автоматической рассылки ваших сообщений клиентам</p>
@@ -12,18 +25,58 @@
                 <div class="card-header">
                     <h4 class="my-0 font-weight-normal">Попробуй сервис MAILING </h4>
                 </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2 col-6 mx-auto">
-                        <a class="btn btn-secondary btn-primary" type="button" href="{% url 'main:message_list' %}">Посмотреть все сообщения</a>
-
-                        <a class="btn btn-secondary btn-primary" type="button" href="{% url 'main:client_list' %}">Посмотреть всех клиентов</a>
-                        <a class="btn btn-secondary btn-primary" type="button" href="{% url 'main:mailing_list' %}">Посмотреть все рассылки</a>
-
+                <div class="container">
+                    <div class="row text-center">
+                    <div class="card" style="width: 23rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">сообщения</h5>
+                                <p class="card-text">Количество сообщений: {{ all_messages }}</p>
+                                <a href="{% url 'main:message_list' %}" class="btn btn-secondary btn-primary">Посмотреть все сообщения</a>
+                        </div>
                     </div>
 
+
+                     <div class="card" style="width: 23rem;">
+                         <div class="card-body">
+                            <h5 class="card-title">Сервисные клиенты</h5>
+                                <p class="card-text">Количество клиентов: {{ all_clients }}</p>
+                                <a href="{% url 'main:client_list' %}" class="btn btn-secondary btn-primary">Посмотреть всех клиентов</a>
+                         </div>
+                     </div>
+
+                     <div class="card" style="width: 23rem;">
+                         <div class="card-body">
+                            <h5 class="card-title">Рассылки</h5>
+                                <p class="card-text">Количество рассылок: {{ all_mailings }}</p>
+                                <p class="card-text">Количество активных рассылок: {{ active_mailings }}</p>
+                                <a href="{% url 'main:mailing_list' %}" class="btn btn-secondary btn-primary">Посмотреть всех расслыки</a>
+                         </div>
+                     </div>
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                  Последние посты блога
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+
+                                </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        {% for object in random_blogs %}
+                                            <h2>{{ object.title }}</h2>
+                                            <p class="card-text">Содержание: {{ object.content}}</p>
+                                            <p class="card-text"> Создана {{ object.created_at }}</p>
+                                            <p class="card-text">Просмотры- {{ object.views_count }}</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock %}

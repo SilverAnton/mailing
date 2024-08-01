@@ -13,14 +13,19 @@
                             <table class="table table-striped">
                                 <tr>
                                     <td>Имя сервисного клиента: {{ object.name }}</td>
+                                </tr>
+                                <tr>
                                     <td>Email сервисного клиента: {{ object.email }}</td>
                                 </tr>
+                                <tr>
+                                    <td>автор сервисного клиента: {{ object.owner }}</td>
+                                </tr>
                             </table>
-
+                                    {% if user == object.owner or user.is_superuser %}
                                     <a class="btn btn-secondary btn-primary" type="button" href="{% url 'main:client_update' object.pk %}">Изменить</a>
 
                                     <a class="btn btn-secondary btn-primary" type="button" href="{% url 'main:client_delete' object.pk %}">Удалить</a>
-
+                                    {% endif %}
                         </div>
                     </div>
                 </div>

@@ -3,8 +3,11 @@ from django.shortcuts import render
 from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+from mailing_blog.services import get_blog_list_from_cache
 from main.forms import ClientForm, MessageForm, MailingForm, MailingManagerForm
 from main.models import ServiceClient, ClientMessage, Mailing
+from main.services import get_client_list_from_cache, get_message_list_from_cache
 
 
 class BasePageView(TemplateView):
@@ -19,8 +22,17 @@ class HomePageView(TemplateView):
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+        context_data = super().get_context_data(**kwargs)
+        mailings = Mailing.objects.all()
+        clients = ServiceClient.objects.all()
+        messages = ClientMessage.objects.all()
+        context_data['all_mailings'] = mailings.count()
+        context_data['active_mailings'] = mailings.filter(status=Mailing.STARTED).count()
+        context_data['active_clients'] = clients.values('email').distinct().count()
+        context_data['all_messages'] = messages.count()
+        context_data['random_blogs'] = get_blog_list_from_cache().order_by('?')[:3]
+        return context_data
+
 
 
 ################################################################
@@ -40,12 +52,20 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
 
 class ClientListView(ListView):
     model = ServiceClient
-    #success_url = reverse_lazy("main:index")
+
+    #def get_queryset(self, queryset=None):
+        #queryset = super().get_queryset()
+        #user = self.request.user
+        #if not user.is_superuser:
+            #queryset = get_client_list_from_cache().filter(owner=self.request.user)
+        #return queryset
+
+    #def get_queryset(self):
+        #return get_client_list_from_cache()
 
 
 class ClientDetailView(DetailView):
     model = ServiceClient
-    #success_url = reverse_lazy("main:index")
 
 
 class ClientUpdateView(LoginRequiredMixin, UpdateView):
@@ -65,6 +85,7 @@ class ClientDeleteView(DeleteView):
     model = ServiceClient
     success_url = reverse_lazy("main:client_list")
 
+
 ################################################################
 
 
@@ -83,12 +104,13 @@ class MessageCreateView(LoginRequiredMixin, CreateView):
 
 class MessageListView(ListView):
     model = ClientMessage
-    #success_url = reverse_lazy("main:index")
+
+    def get_queryset(self):
+        return get_message_list_from_cache()
 
 
 class MessageDetailView(DetailView):
     model = ClientMessage
-    #success_url = reverse_lazy("main:message_list")
 
 
 class MessageUpdateView(LoginRequiredMixin, UpdateView):
@@ -109,6 +131,9 @@ class MessageDeleteView(DeleteView):
     success_url = reverse_lazy("main:message_list")
 
 
+################################################################
+
+
 class MailingCreateView(LoginRequiredMixin, CreateView):
     model = Mailing
     form_class = MailingForm
@@ -120,6 +145,7 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         mailing.owner = user
         mailing.save()
         return super().form_valid(form)
+
 
 
 
@@ -145,11 +171,13 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_form_class(self):
         user = self.request.user
-        if user == self.object.owner:
+        if user == self.object.owner or user.is_superuser:
             return MailingForm
         elif user.has_perm("main.can_edit_status"):
             return MailingManagerForm
         raise PermissionDenied
+
+
 
 
 class MailingDeleteView(DeleteView):
