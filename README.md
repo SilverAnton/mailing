@@ -1,0 +1,1 @@
+This is mailing servise. For a successful deployment, install the required packages from pyproject.toml. Create a .env file to configure database settings for the admin server. Generate migrations and start the development server using: 'python3 manage.py runserver'.
